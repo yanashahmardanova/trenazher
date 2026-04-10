@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Тренажёр: деловая переписка с клиентами B2B</title>
+  <meta name="description" content="Интерактивный тренажёр для коммерческой службы по теме деловой переписки с клиентами в B2B." />
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --surface: #ffffff;
+      --surface-soft: #f8fafc;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --line: #dbe3ef;
+      --primary: #1d4ed8;
+      --primary-dark: #163ea8;
+      --success: #157347;
+      --danger: #b42318;
+      --shadow: 0 10px 35px rgba(15, 23, 42, 0.08);
+      --radius: 20px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, Arial, sans-serif;
+      background: linear-gradient(180deg, #eef4ff 0%, var(--bg) 100%);
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    .container {
+      width: min(1000px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 32px 0 60px;
+    }
+
+    .hero,
+    .card,
+    .question,
+    .result-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .hero {
+      padding: 28px;
+      margin-bottom: 24px;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: #dbeafe;
+      color: var(--primary);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      margin-bottom: 14px;
+    }
+
+    h1, h2, h3 { margin: 0 0 12px; }
+
+    .hero p {
+      margin: 0;
+      color: var(--muted);
+      max-width: 820px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .card {
+      padding: 22px;
+    }
+
+    .label {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .input,
+    textarea {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1px solid #cdd8e6;
+      border-radius: 14px;
+      font-size: 15px;
+      outline: none;
+      transition: 0.2s ease;
+      background: #fff;
+    }
+
+    .input:focus,
+    textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(29, 78, 216, 0.12);
+    }
+
+    .small-note {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .start-actions,
+    .footer-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    button {
+      border: none;
+      border-radius: 14px;
+      padding: 14px 18px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.15s ease, background 0.15s ease, opacity 0.15s ease;
+    }
+
+    button:hover { transform: translateY(-1px); }
+    button:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover { background: var(--primary-dark); }
+
+    .btn-secondary {
+      background: #eef2ff;
+      color: #233876;
+    }
+
+    .hidden { display: none; }
+
+    #quizSection {
+      margin-top: 24px;
+    }
+
+    .question {
+      padding: 24px;
+      margin-bottom: 18px;
+    }
+
+    .question-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .question-number {
+      min-width: 110px;
+      text-align: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: #eff6ff;
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .scenario {
+      font-size: 16px;
+      margin-bottom: 16px;
+    }
+
+    .hint {
+      background: #fffbea;
+      border: 1px solid #f3e8b3;
+      color: #6b5500;
+      border-radius: 16px;
+      padding: 14px 16px;
+      margin-bottom: 16px;
+      font-size: 14px;
+    }
+
+    .options {
+      display: grid;
+      gap: 12px;
+    }
+
+    .option {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 14px 16px;
+      background: var(--surface-soft);
+      transition: 0.2s ease;
+    }
+
+    .option:hover {
+      border-color: #b7c7de;
+      background: #ffffff;
+    }
+
+    .option input {
+      margin-right: 10px;
+      transform: translateY(1px);
+    }
+
+    .option.correct {
+      border-color: rgba(21, 115, 71, 0.35);
+      background: rgba(21, 115, 71, 0.08);
+    }
+
+    .option.incorrect {
+      border-color: rgba(180, 35, 24, 0.28);
+      background: rgba(180, 35, 24, 0.06);
+    }
+
+    .explanation {
+      margin-top: 14px;
+      border-top: 1px dashed var(--line);
+      padding-top: 14px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .result-card {
+      padding: 24px;
+      margin-top: 24px;
+    }
+
+    .result-score {
+      font-size: 40px;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+
+    .status {
+      padding: 12px 14px;
+      border-radius: 14px;
+      margin-top: 16px;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .status.info {
+      background: #eff6ff;
+      color: #1d4ed8;
+      border: 1px solid #bfdbfe;
+    }
+
+    .status.success {
+      background: #ecfdf3;
+      color: var(--success);
+      border: 1px solid #b7ebc7;
+    }
+
+    .status.error {
+      background: #fff1f1;
+      color: var(--danger);
+      border: 1px solid #f0c2c0;
+    }
+
+    .summary-list {
+      margin: 16px 0 0;
+      padding-left: 20px;
+    }
+
+    .summary-list li { margin-bottom: 8px; }
+
+    .footer-note {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 18px;
+    }
+
+    @media (max-width: 760px) {
+      .grid { grid-template-columns: 1fr; }
+      .question-head { flex-direction: column; }
+      .question-number { min-width: auto; }
+      .result-score { font-size: 34px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="hero">
+      <span class="eyebrow">B2B Sales Training</span>
+      <h1>Тренажёр по деловой переписке с клиентами</h1>
+      <p>
+        Ниже — 5 ситуационных вопросов для коммерческой службы. В каждом кейсе нужно выбрать наиболее сильный вариант ответа клиенту.
+        Вопросы специально сделаны неочевидными: все формулировки похожи на реальные рабочие письма, поэтому важно учитывать тон,
+        структуру, клиентоориентированность и управляемость следующего шага.
+      </p>
+    </section>
+
+    <section class="card" id="introCard">
+      <h2>Перед началом заполните данные</h2>
+      <div class="grid">
+        <div>
+          <label class="label" for="firstName">Имя</label>
+          <input class="input" id="firstName" type="text" placeholder="Например, Анна" />
+        </div>
+        <div>
+          <label class="label" for="lastName">Фамилия</label>
+          <input class="input" id="lastName" type="text" placeholder="Например, Иванова" />
+        </div>
+      </div>
+
+      <div class="grid">
+        <div>
+          <label class="label" for="employeeEmail">Email сотрудника (необязательно)</label>
+          <input class="input" id="employeeEmail" type="email" placeholder="name@company.ru" />
+        </div>
+        <div>
+          <label class="label" for="managerEmail">Email для получения результатов</label>
+          <input class="input" id="managerEmail" type="email" placeholder="you@company.ru" value="owner@example.com" />
+        </div>
+      </div>
+
+      <p class="small-note">
+        Для отправки результатов на почту в версии для GitHub Pages используется EmailJS. Ниже в коде нужно будет подставить свои значения
+        <strong>PUBLIC KEY</strong>, <strong>SERVICE ID</strong> и <strong>TEMPLATE ID</strong>. Без этой настройки тренажёр будет работать,
+        но письма отправляться не будут.
+      </p>
+
+      <div class="start-actions">
+        <button class="btn-primary" id="startBtn">Начать тренажёр</button>
+      </div>
+      <div class="status info" id="introStatus">
+        После завершения участник увидит результат на экране, а вы сможете получать его по email.
+      </div>
+    </section>
+
+    <section id="quizSection" class="hidden"></section>
+
+    <section id="resultSection" class="result-card hidden"></section>
+  </div>
+
+  <script type="module">
+    import * as emailjs from 'https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js';
+
+    const EMAILJS_PUBLIC_KEY = 'YOUR_PUBLIC_KEY';
+    const EMAILJS_SERVICE_ID = 'YOUR_SERVICE_ID';
+    const EMAILJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID';
+
+    const quizData = [
+      {
+        id: 1,
+        title: 'Клиент просит цену слишком рано',
+        scenario: 'Потенциальный клиент после короткого созвона пишет: «Пришлите, пожалуйста, КП и цену сегодня. Нужно быстро сравнить предложения». У вас пока мало вводных: непонятен объём, сроки внедрения и критерии выбора.',
+        hint: 'Подумайте, что важнее: быстро ответить любой ценой или сохранить темп сделки, но не уйти в «сравнение по цене без контекста».',
+        options: [
+          {
+            text: 'Добрый день! Направляю базовый прайс во вложении. Если будет интересно, обсудим детали позже.',
+            correct: false,
+            explanation: 'Ответ быстрый, но переводит диалог в плоскость цены и почти не управляет следующим шагом.'
+          },
+          {
+            text: 'Добрый день! Чтобы предложение было релевантным и действительно полезным для сравнения, предлагаю уточнить 3 параметра: предполагаемый объём, целевой срок запуска и ключевые критерии выбора. Если удобно, пришлю сегодня предварительную рамку стоимости и завтра после уточнения — финализированное КП.',
+            correct: true,
+            explanation: 'Сильный ответ: сохраняет скорость, не отказывает клиенту, но переводит разговор к нужной квалификации и управляемому следующему шагу.'
+          },
+          {
+            text: 'Без полного брифа мы КП не готовим. Пожалуйста, заполните анкету на 2 страницы, после этого вернёмся с расчётом.',
+            correct: false,
+            explanation: 'Логично с процессной точки зрения, но слишком тяжёлый вход для ранней стадии — высок риск потерять темп и интерес.'
+          },
+          {
+            text: 'Стоимость зависит от множества факторов, поэтому пока назвать её невозможно.',
+            correct: false,
+            explanation: 'Формально верно, но клиент не получает ни пользы, ни ощущения движения вперёд.'
+          }
+        ]
+      },
+      {
+        id: 2,
+        title: 'Клиент недоволен задержкой ответа',
+        scenario: 'Клиент пишет: «Коллеги, уже второй день нет ответа по согласованию договора. Для нас это критично». Юридический отдел действительно задерживается, и точного срока ответа у вас пока нет.',
+        hint: 'Неочевидность здесь в балансе между честностью, ответственностью и управлением ожиданиями.',
+        options: [
+          {
+            text: 'Извините за задержку. Ждём юристов. Как только они ответят, сразу вам напишем.',
+            correct: false,
+            explanation: 'Есть вежливость, но нет конкретики и нет признаков того, что ситуация реально под контролем.'
+          },
+          {
+            text: 'Благодарю, что напомнили. Вижу важность срока для вас. Сейчас документ на согласовании у юристов с нашей стороны; я взял вопрос в приоритетный контроль и вернусь к вам сегодня до 17:00 даже в том случае, если финальный комментарий ещё не будет готов — как минимум дам статус и следующий ориентир по срокам.',
+            correct: true,
+            explanation: 'Сильный ответ: признаёт важность, берёт ответственность за коммуникацию и даёт понятный следующий контактный момент даже при отсутствии финального решения.'
+          },
+          {
+            text: 'Задержка возникла не с нашей стороны, а со стороны юридического отдела, поэтому просим ожидать.',
+            correct: false,
+            explanation: 'Перекладывание ответственности почти всегда ухудшает восприятие сервиса со стороны клиента.'
+          },
+          {
+            text: 'Понимаем вашу срочность, но договоры всегда согласовываются долго.',
+            correct: false,
+            explanation: 'Это объяснение может быть правдой, но оно не снижает напряжение и не помогает клиенту планировать свои действия.'
+          }
+        ]
+      },
+      {
+        id: 3,
+        title: 'Нужно отказать в скидке, не разрушив диалог',
+        scenario: 'Клиент пишет после получения предложения: «Конкурент дал цену ниже на 12%. Если готовы снизиться, продолжим обсуждение». Ваша маржинальность не позволяет просто «срезать» цену.',
+        hint: 'Лучший ответ — не обязательно тот, где скидки нет. Важен способ обсуждения ценности и рамок переговоров.',
+        options: [
+          {
+            text: 'Мы не участвуем в торге и не пересматриваем цены после отправки КП.',
+            correct: false,
+            explanation: 'Жёсткая позиция может выглядеть уверенно, но часто обрывает конструктивный диалог и не раскрывает ценность предложения.'
+          },
+          {
+            text: 'Готовы дать скидку 12%, чтобы не останавливать процесс. Подтвердите, и обновим КП.',
+            correct: false,
+            explanation: 'Слишком быстрая уступка снижает доверие к исходной цене и обесценивает предложение.'
+          },
+          {
+            text: 'Спасибо, что открыто поделились ориентиром. Чтобы предметно сравнить предложения, предлагаю сверить состав работ, SLA, формат сопровождения и зоны ответственности после запуска. Если увидим, что объём или конфигурацию можно оптимизировать, предложу вариант, который даст более комфортный бюджет без потери критичных для вас результатов.',
+            correct: true,
+            explanation: 'Сильный вариант: не спорит с клиентом, не уходит в жёсткий отказ и переводит разговор из скидки в ценность, объём и конструкцию решения.'
+          },
+          {
+            text: 'Цена полностью обоснована, потому что у нас высокое качество.',
+            correct: false,
+            explanation: 'Общие слова о качестве редко убеждают в B2B без привязки к параметрам сравнения и бизнес-эффекту.'
+          }
+        ]
+      },
+      {
+        id: 4,
+        title: 'Клиент «замолчал» после встречи',
+        scenario: 'После продуктивной встречи прошло 8 дней. Клиент не отвечает на два ваших письма. Нужно отправить follow-up так, чтобы не звучать навязчиво, но вернуть коммуникацию в деловое русло.',
+        hint: 'Слабые follow-up письма обычно либо слишком давят, либо не дают клиенту лёгкого способа ответить.',
+        options: [
+          {
+            text: 'Добрый день! Напоминаю о себе. Есть ли новости?',
+            correct: false,
+            explanation: 'Слишком общий follow-up: клиенту неудобно отвечать, потому что письмо не предлагает понятного контекста и сценария ответа.'
+          },
+          {
+            text: 'Поскольку вы не отвечаете, полагаю, вопрос больше не актуален.',
+            correct: false,
+            explanation: 'Иногда такой приём срабатывает, но в корпоративной переписке он легко воспринимается как пассивная агрессия.'
+          },
+          {
+            text: 'Добрый день! Возвращаюсь к нашей встрече от 2 апреля. Обсуждали запуск пилота и согласование внутреннего решения с вашей стороны. Чтобы вам было проще сориентироваться, ниже кратко зафиксировал 3 согласованных пункта и возможные следующие шаги. Подскажите, пожалуйста, какой сценарий сейчас ближе: 1) возвращаемся к обсуждению на этой неделе, 2) переносим на более поздний срок, 3) тема пока не в приоритете. Подойдёт ответ даже одной цифрой.',
+            correct: true,
+            explanation: 'Лучший вариант: напоминает контекст, снижает когнитивную нагрузку и предлагает лёгкий формат ответа без давления.'
+          },
+          {
+            text: 'Добрый день! Очень жду обратную связь, так как нам важно закрыть вопрос до конца недели.',
+            correct: false,
+            explanation: 'Фокус на внутренних интересах продавца, а не на логике клиента. Это редко усиливает отклик.'
+          }
+        ]
+      },
+      {
+        id: 5,
+        title: 'Ошибка со стороны вашей компании',
+        scenario: 'Клиент обнаружил, что в отправленном вами письме были некорректные цифры по срокам поставки. Из-за этого внутри его компании уже успели озвучить неверное ожидание коллегам. Нужно быстро ответить письменно.',
+        hint: 'Хорошее письмо в такой ситуации сочетает признание ошибки, корректировку фактов и восстановление доверия через действия.',
+        options: [
+          {
+            text: 'Коллеги, в предыдущем письме была допущена неточность. Актуальные сроки другие. Просьба использовать новую информацию.',
+            correct: false,
+            explanation: 'Есть корректировка, но почти нет эмпатии и ответственности за последствия для клиента.'
+          },
+          {
+            text: 'Коллеги, благодарю, что оперативно обратили внимание. Подтверждаю: в моём предыдущем письме была ошибка по срокам поставки, и это могло повлиять на ваше внутреннее планирование. Корректные сроки: 6–8 недель. Приношу извинения за путаницу. Чтобы снизить неудобство, сегодня до 15:00 отдельно направлю обновлённое письмо в удобном для пересылки формате, а также предложу вариант поэтапной поставки, если для вас критично ускорить часть объёма.',
+            correct: true,
+            explanation: 'Сильный ответ: прямо признаёт ошибку, понимает влияние на клиента и сразу добавляет конкретные шаги по исправлению ситуации.'
+          },
+          {
+            text: 'Прошу не ориентироваться на предыдущее письмо, так как цифры были предварительными.',
+            correct: false,
+            explanation: 'Похоже на попытку смягчить ответственность задним числом — это может подорвать доверие.'
+          },
+          {
+            text: 'Сроки изменились по независящим от нас причинам.',
+            correct: false,
+            explanation: 'Проблема не в том, что сроки изменились, а в том, что ранее была передана неверная информация.'
+          }
+        ]
+      }
+    ];
+
+    const state = {
+      participant: null,
+      submitted: false,
+    };
+
+    const introStatus = document.getElementById('introStatus');
+    const startBtn = document.getElementById('startBtn');
+    const quizSection = document.getElementById('quizSection');
+    const resultSection = document.getElementById('resultSection');
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+    }
+
+    function getLevelText(score) {
+      if (score === 5) return 'Отличный уровень: уверенная письменная коммуникация с клиентом в B2B.';
+      if (score >= 4) return 'Хороший уровень: сильная база, но есть точки для усиления формулировок.';
+      if (score >= 3) return 'Рабочий уровень: часть ситуаций решается верно, но некоторые письма стоит донастроить.';
+      return 'Зона роста: полезно дополнительно потренировать логику клиентской переписки и управление следующим шагом.';
+    }
+
+    function validateIntro() {
+      const firstName = document.getElementById('firstName').value.trim();
+      const lastName = document.getElementById('lastName').value.trim();
+      const employeeEmail = document.getElementById('employeeEmail').value.trim();
+      const managerEmail = document.getElementById('managerEmail').value.trim();
+
+      if (!firstName || !lastName) {
+        introStatus.className = 'status error';
+        introStatus.textContent = 'Укажите имя и фамилию участника, чтобы начать тренажёр.';
+        return null;
+      }
+
+      if (!managerEmail) {
+        introStatus.className = 'status error';
+        introStatus.textContent = 'Укажите email, на который нужно отправлять результаты.';
+        return null;
+      }
+
+      return { firstName, lastName, employeeEmail, managerEmail };
+    }
+
+    function renderQuiz() {
+      const html = `
+        <form id="quizForm">
+          ${quizData.map((question, index) => `
+            <article class="question">
+              <div class="question-head">
+                <div>
+                  <h3>${escapeHtml(question.title)}</h3>
+                  <div class="scenario">${escapeHtml(question.scenario)}</div>
+                </div>
+                <div class="question-number">Вопрос ${index + 1} из ${quizData.length}</div>
+              </div>
+
+              <div class="hint"><strong>Подсказка:</strong> ${escapeHtml(question.hint)}</div>
+
+              <div class="options">
+                ${question.options.map((option, optionIndex) => `
+                  <label class="option" data-question-id="${question.id}" data-option-index="${optionIndex}">
+                    <input type="radio" name="question-${question.id}" value="${optionIndex}" />
+                    <span>${escapeHtml(option.text)}</span>
+                  </label>
+                `).join('')}
+              </div>
+
+              <div class="explanation hidden" id="explanation-${question.id}"></div>
+            </article>
+          `).join('')}
+
+          <div class="footer-actions">
+            <button type="submit" class="btn-primary" id="submitBtn">Проверить результат</button>
+            <button type="button" class="btn-secondary" id="resetBtn">Пройти заново</button>
+          </div>
+        </form>
+      `;
+
+      quizSection.innerHTML = html;
+      quizSection.classList.remove('hidden');
+      resultSection.classList.add('hidden');
+
+      document.getElementById('quizForm').addEventListener('submit', handleSubmit);
+      document.getElementById('resetBtn').addEventListener('click', resetQuiz);
+    }
+
+    function collectAnswers() {
+      return quizData.map((question) => {
+        const checked = document.querySelector(`input[name="question-${question.id}"]:checked`);
+        const selectedIndex = checked ? Number(checked.value) : null;
+        const selectedOption = selectedIndex !== null ? question.options[selectedIndex] : null;
+        const correctIndex = question.options.findIndex((option) => option.correct);
+
+        return {
+          questionId: question.id,
+          questionTitle: question.title,
+          selectedIndex,
+          selectedText: selectedOption ? selectedOption.text : null,
+          isCorrect: Boolean(selectedOption?.correct),
+          correctText: question.options[correctIndex].text,
+          explanation: selectedOption ? selectedOption.explanation : 'Ответ не выбран.',
+        };
+      });
+    }
+
+    function markAnswers(answers) {
+      answers.forEach((answer) => {
+        const explanationBox = document.getElementById(`explanation-${answer.questionId}`);
+        const question = quizData.find((item) => item.id === answer.questionId);
+        const correctIndex = question.options.findIndex((option) => option.correct);
+
+        document.querySelectorAll(`[data-question-id="${answer.questionId}"]`).forEach((label, idx) => {
+          label.classList.remove('correct', 'incorrect');
+          if (idx === correctIndex) label.classList.add('correct');
+          if (answer.selectedIndex === idx && idx !== correctIndex) label.classList.add('incorrect');
+        });
+
+        explanationBox.classList.remove('hidden');
+        if (answer.selectedIndex === null) {
+          explanationBox.innerHTML = '<strong>Ответ не выбран.</strong> Для этой ситуации стоило выбрать наиболее сильную формулировку и сравнить её с верным вариантом, подсвеченным зелёным.';
+        } else {
+          explanationBox.innerHTML = `
+            <strong>${answer.isCorrect ? 'Верно.' : 'Не лучший вариант.'}</strong>
+            ${escapeHtml(answer.explanation)}
+          `;
+        }
+      });
+    }
+
+    function renderResults(answers) {
+      const score = answers.filter((item) => item.isCorrect).length;
+      const participantName = `${state.participant.firstName} ${state.participant.lastName}`;
+
+      resultSection.innerHTML = `
+        <h2>Результат участника: ${escapeHtml(participantName)}</h2>
+        <div class="result-score">${score} / ${quizData.length}</div>
+        <p>${escapeHtml(getLevelText(score))}</p>
+
+        <ul class="summary-list">
+          ${answers.map((answer, idx) => `
+            <li>
+              <strong>Вопрос ${idx + 1}:</strong>
+              ${answer.isCorrect ? 'выбран сильный вариант.' : 'есть зона роста.'}
+            </li>
+          `).join('')}
+        </ul>
+
+        <div class="status info" id="mailStatus">Пытаемся отправить результат на почту…</div>
+        <div class="footer-note">
+          Если вы размещаете страницу на GitHub Pages, сам тренажёр будет открываться как обычный сайт по ссылке из репозитория.
+        </div>
+      `;
+      resultSection.classList.remove('hidden');
+    }
+
+    async function sendResultsByEmail(answers) {
+      const mailStatus = document.getElementById('mailStatus');
+
+      const isEmailConfigured = ![
+        EMAILJS_PUBLIC_KEY,
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID
+      ].some((value) => value.startsWith('YOUR_'));
+
+      if (!isEmailConfigured) {
+        mailStatus.className = 'status error';
+        mailStatus.textContent = 'EmailJS не настроен: замените YOUR_PUBLIC_KEY, YOUR_SERVICE_ID и YOUR_TEMPLATE_ID в коде, чтобы получать результаты по почте.';
+        return;
+      }
+
+      try {
+        emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+
+        const score = answers.filter((item) => item.isCorrect).length;
+        const participantName = `${state.participant.firstName} ${state.participant.lastName}`;
+        const detailLines = answers.map((answer, idx) => {
+          return [
+            `Вопрос ${idx + 1}: ${answer.questionTitle}`,
+            `Выбранный ответ: ${answer.selectedText ?? 'Не выбран'}`,
+            `Корректность: ${answer.isCorrect ? 'Верно' : 'Неверно'}`,
+            `Рекомендуемый вариант: ${answer.correctText}`,
+            ''
+          ].join('\n');
+        }).join('\n');
+
+        await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+          to_email: state.participant.managerEmail,
+          manager_email: state.participant.managerEmail,
+          participant_name: participantName,
+          participant_email: state.participant.employeeEmail || 'Не указан',
+          score: `${score} из ${quizData.length}`,
+          level: getLevelText(score),
+          details: detailLines,
+          submitted_at: new Date().toLocaleString('ru-RU')
+        });
+
+        mailStatus.className = 'status success';
+        mailStatus.textContent = 'Результат успешно отправлен на указанный email.';
+      } catch (error) {
+        console.error(error);
+        mailStatus.className = 'status error';
+        mailStatus.textContent = 'Не удалось отправить письмо. Проверьте настройки EmailJS и шаблон письма.';
+      }
+    }
+
+    async function handleSubmit(event) {
+      event.preventDefault();
+      if (state.submitted) return;
+
+      state.submitted = true;
+      const answers = collectAnswers();
+      markAnswers(answers);
+      renderResults(answers);
+      await sendResultsByEmail(answers);
+    }
+
+    function resetQuiz() {
+      state.submitted = false;
+      quizSection.classList.add('hidden');
+      quizSection.innerHTML = '';
+      resultSection.classList.add('hidden');
+      resultSection.innerHTML = '';
+      introStatus.className = 'status info';
+      introStatus.textContent = 'После завершения участник увидит результат на экране, а вы сможете получать его по email.';
+      renderQuiz();
+      window.scrollTo({ top: quizSection.offsetTop - 16, behavior: 'smooth' });
+    }
+
+    function runSelfTests() {
+      console.group('Self-tests');
+      console.assert(escapeHtml('<b>&"\'</b>').includes('&lt;b&gt;'), 'escapeHtml should escape opening tag');
+      console.assert(escapeHtml('<b>&"\'</b>').includes('&amp;'), 'escapeHtml should escape ampersand');
+      console.assert(getLevelText(5).includes('Отличный уровень'), 'score 5 should map to excellent');
+      console.assert(getLevelText(4).includes('Хороший уровень'), 'score 4 should map to good');
+      console.assert(getLevelText(3).includes('Рабочий уровень'), 'score 3 should map to working');
+      console.assert(getLevelText(2).includes('Зона роста'), 'score 2 should map to growth zone');
+      console.assert(Array.isArray(quizData) && quizData.length === 5, 'quiz should contain 5 questions');
+      console.assert(quizData.every((q) => q.options.filter((o) => o.correct).length === 1), 'each question should have exactly one correct option');
+      console.assert(typeof emailjs.init === 'function', 'emailjs.init should be available');
+      console.assert(typeof emailjs.send === 'function', 'emailjs.send should be available');
+      console.groupEnd();
+    }
+
+    startBtn.addEventListener('click', () => {
+      const participant = validateIntro();
+      if (!participant) return;
+
+      state.participant = participant;
+      state.submitted = false;
+      introStatus.className = 'status success';
+      introStatus.textContent = `Участник ${participant.firstName} ${participant.lastName} может приступать к тренажёру.`;
+      renderQuiz();
+      window.scrollTo({ top: quizSection.offsetTop - 16, behavior: 'smooth' });
+    });
+
+    runSelfTests();
+  </script>
+</body>
+</html>
